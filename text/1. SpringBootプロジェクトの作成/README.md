@@ -71,7 +71,7 @@ LTS の 17 で
 
 ## 起動
 
-1. /<指定したパッケージ>/<指定したアプリケーション名>/Application.java を開く
+1. `src/main/java/<指定したパッケージ>/<指定したアプリケーション名>/Application.java` を開く
 2. Run を押す
 3. 以下のような起動ログが出れば OK
    ![](./images/firstRun.png)
@@ -101,7 +101,7 @@ LTS の 17 で
    起動したアプリケーションを止める。shell を閉じるか`Ctrl+C`で終了できる。
    終了したら再度`Run`を押す。
 
-   ※ 画面中央上にあるリスタートボタンを押しただけでは再ビルドされない。
+   画面中央上にあるリスタートボタンを押しても良い。
 
    ![](./images/secondRun.png)
 
@@ -112,3 +112,11 @@ LTS の 17 で
    [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health)
 
    ![](./images/health.png)
+
+---
+
+# 課題
+
+1. 上記を参考に SpringBoot アプリケーションを起動せよ。
+1. 起動したら以下のヘルスチェックパスにアクセスできることを確認せよ。
+   [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health)
