@@ -24,9 +24,9 @@ Spring の持つ複雑さを隠蔽し、短時間でアプリケーションを�
 
 ## 1.3 クリーンアーキテクチャについて
 
-クリーンアーキテクチャとは、Robert C. Martin（通称「Uncle Bob」）が提唱したソフトウェア設計のパターンである。以下の 4 つの層から成り立っている。
+![クリーンアーキテクチャの図](./images/CleanArchitecture.jpg)
 
-![クリーンアーキテクチャの図](/images/CleanArchitecture.jpg)
+クリーンアーキテクチャとは、Robert C. Martin（通称「Uncle Bob」）が提唱したソフトウェア設計のパターンである。以下の 4 つの層から成り立っている。
 
 1. エンティティ
 2. ユースケース
@@ -134,4 +134,4 @@ public class MyService {
 
 ### DI イメージ図
 
-![DIの流れの図](/images/di.drawio.png)
+![DIの流れの図](./images/di.drawio.png)
