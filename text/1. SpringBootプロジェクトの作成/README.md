@@ -5,8 +5,7 @@
 1. Extension Pack for Java
 2. Spring Boot Extension Pack
 
-<img src="./images/ExtensionPackforJava.png" width=500>
-<img src="./images/SpringBootExtensionPack.png" width=500>
+<img src="./images/ExtensionPackforJava.png" width=500> <img src="./images/SpringBootExtensionPack.png" width=500>
 
 ---
 
