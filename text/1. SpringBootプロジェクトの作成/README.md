@@ -5,6 +5,16 @@ Spring の持つ複雑さを隠蔽し、短時間でアプリケーションを�
 
 ---
 
+## 0. 三層ウェブアプリケーションについて
+
+[参考：ソフトバンクの記事](https://www.softbank.jp/biz/blog/cloud-technology/articles/202206/web-3-tier-architecture/)
+
+![三層ウェブアプリケーションの図](./images/img-web-3-tier-architecture-20220622-02.jpeg)
+
+今回開発するのはこの図の`APPサーバー`である。
+
+---
+
 ## 1.1 主な特徴
 
 1. **スタンドアローン**: Spring Boot アプリケーションはスタンドアローンで、Tomcat や Jetty のようなアプリケーションサーバが不要である。Java アプリケーションとして実行することができる。
@@ -135,3 +145,10 @@ public class MyService {
 ### DI イメージ図
 
 ![DIの流れの図](./images/di.drawio.png)
+
+## まとめ
+
+Spring Boot のメリットは以下
+
+- tomcat が内蔵されているのでアプリをホストするためのミドルウェアがいらない。
+- DI によってコンポーネント間の結合度を下がり、テストやメンテナンスが容易になる。
