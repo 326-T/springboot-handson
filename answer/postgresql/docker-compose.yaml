@@ -1,0 +1,13 @@
+services:
+  postgres:
+    image: postgres:14.2
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: sample
+      POSTGRES_PASSWORD: sample
+      POSTGRES_DB: sample
+    healthcheck:
+      test: psql -U postgres -d postgres -c 'select 1'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data

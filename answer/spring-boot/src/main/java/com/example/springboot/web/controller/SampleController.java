@@ -53,7 +53,7 @@ public class SampleController {
 
     @GetMapping("/square/{number}")
     public Integer square(@PathVariable Integer number) {
-        return number * number;
+        return sampleService.square(number);
     }
 
     @PostMapping("/bmi")

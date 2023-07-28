@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/sample
+    username: sample
+    password: sample
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: sample
+      username: sample
+      password: sample
+      authentication-database: admin
