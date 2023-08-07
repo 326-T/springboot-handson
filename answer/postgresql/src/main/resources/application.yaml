@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/sample
+    username: sample
+    password: sample
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+  flyway:
+    enabled: true
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/sample
+    user: sample
+    password: sample
+
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
