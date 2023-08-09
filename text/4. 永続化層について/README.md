@@ -55,9 +55,14 @@
 
    ```xml
    <dependencies>
+       <!-- 以下の依存を追記する -->
        <dependency>
            <groupId>org.postgresql</groupId>
            <artifactId>postgresql</artifactId>
+       </dependency>
+       <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-data-jdbc</artifactId>
        </dependency>
        <dependency>
            <groupId>org.mybatis.spring.boot</groupId>
@@ -88,13 +93,12 @@
    @AllArgsConstructor
    @NoArgsConstructor
    @Builder
-   public class Department {
+   public class User {
 
-       private String id;
+       private Integer id;
        private String name;
-       private String description;
+       private String email;
    }
-
    ```
 
 1. Mapper の実装
@@ -104,22 +108,26 @@
 
    // ...
 
-   import com.example.springboot.persistence.entity.Department;
+   import com.example.springboot.persistence.entity.User;
 
    @Mapper
-   public interface DepartmentMapper {
+   public interface UserMapper {
 
-       @Select("SELECT * FROM department WHERE id = #{id}")
-       Department findById(Long id);
+       @Select("SELECT * FROM users;")
+       List<User> findAll();
 
-       @Insert("INSERT INTO department(name, description) VALUES(#{name}, #{description})")
-       Department insert(Department department);
+       @Select("SELECT * FROM users WHERE id = #{id};")
+       User findById(Integer id);
 
-       @Update("UPDATE department SET name = #{name}, description = #{description} WHERE id = #{id}")
-       Department update(Department department);
+       @Insert("INSERT INTO users(name, email) VALUES(#{name}, #{email});")
+       @Options(useGeneratedKeys = true, keyProperty = "id")
+       void insert(User users);
 
-       @Delete("DELETE FROM department WHERE id = #{id}")
-       void deleteById(Long id);
+       @Update("UPDATE users SET name = #{name}, email = #{email} WHERE id = #{id};")
+       void update(User users);
+
+       @Delete("DELETE FROM users WHERE id = #{id};")
+       void deleteById(Integer id);
    }
    ```
 
@@ -132,31 +140,81 @@
 
    //...
 
-   import com.example.springboot.persistence.repository.DepartmentMapper;
-   import com.example.springboot.persistence.entity.Department;
+   import com.example.springboot.persistence.repository.UserMapper;
+   import com.example.springboot.persistence.entity.User;
 
    @Service
-   public class DepartmentService {
+   public class UserService {
 
        @Autowired
-       private DepartmentMapper departmentMapper;
+       private UserMapper userMapper;
 
-       public Department findById(Long id) {
-           return departmentMapper.findById(id);
+       public List<User> findAll() {
+           return userMapper.findAll();
        }
 
-       public Department insert(Department department) {
-           return departmentMapper.insert(department);
+       public User findById(Integer id) {
+           return userMapper.findById(id);
        }
 
-       public Department update(Department department) {
-           return departmentMapper.update(department);
+       public void insert(User user) {
+           userMapper.insert(user);
        }
 
-       public void deleteById(Long id) {
-           departmentMapper.deleteById(id);
+       public void update(User user) {
+           userMapper.update(user);
+       }
+
+       public void deleteById(Integer id) {
+           userMapper.deleteById(id);
        }
    }
+   ```
+
+---
+
+### flyway で migration 管理
+
+さらに初期データを用意してあげる必要がある。今回はマイグレーション管理には`flyway`を使う。
+
+- flyway は実行した SQL のファイル名とそのハッシュ値を管理している。
+- flyway は V1.0.0**sample.sql のように`^V\d+(\.\d+)\***.\*\.sql$`の形式の SQL ファイルを追跡しバージョン順に実行してくれる。
+- まだ実行していないファイルを見つけると実行する。
+- 実行済みのバージョンより古いバージョンがあるとエラーになる。
+- 過去に実施したファイルのハッシュ値が変わるとエラーになる。
+
+1. pom.xml に以下を追加
+
+   ```xml
+   <dependencies>
+       <!-- 以下の依存を追記する -->
+       <dependency>
+           <groupId>org.flywaydb</groupId>
+           <artifactId>flyway-core</artifactId>
+       </dependency>
+   </dependencies>
+   ```
+
+2. src/main/resources/db/migration に以下のファイルを追加
+
+   3. V1.0.0\_\_users_schema.sql
+
+   ```sql
+   CREATE TABLE users
+   (
+     id SERIAL PRIMARY KEY,
+     name VARCHAR(255) NOT NULL,
+     email VARCHAR(255) NOT NULL
+   );
+   ```
+
+   4. V1.0.1\_\_users_data.sql
+
+   ```sql
+   INSERT INTO users (name, email)
+   VALUES
+     (N'太郎', N'xxx@example.com'),
+     (N'次郎', N'yyy@example.com');
    ```
 
 ---
@@ -219,7 +277,7 @@ NoSQL データベースは、従来のリレーショナルデータベース�
 
    ```xml
    <dependencies>
-    ...
+     <!-- 以下の依存を追記する -->
      <dependency>
        <groupId>org.springframework.boot</groupId>
        <artifactId>spring-boot-starter-data-mongodb</artifactId>
@@ -252,12 +310,18 @@ NoSQL データベースは、従来のリレーショナルデータベース�
    @AllArgsConstructor
    @NoArgsConstructor
    @Builder
-   public class User {
+   public class Comment {
 
        @Id
        private String id;
-       private String name;
-       private String email;
+       private String role;
+       private String content;
+       @CreatedDate
+       private LocalDateTime createdAt;
+       @LastModifiedDate
+       private LocalDateTime updatedAt;
+       @Version
+       private Long version;
    }
    ```
 
@@ -274,10 +338,12 @@ NoSQL データベースは、従来のリレーショナルデータベース�
    ```Java
    package com.example.springboot.persistence.repository;
 
+   import org.springframework.stereotype.Repository;
+   import com.example.springboot.persistence.entity.Comment;
    import org.springframework.data.mongodb.repository.MongoRepository;
 
    @Repository
-   public interface UserRepository extends MongoRepository<User, String> {
+   public interface CommentRepository extends MongoRepository<Comment, String> {
    }
    ```
 
@@ -303,42 +369,113 @@ NoSQL データベースは、従来のリレーショナルデータベース�
    import org.springframework.beans.factory.annotation.Autowired;
    import org.springframework.stereotype.Service;
 
-   import com.example.springboot.persistence.entity.User;
-   import com.example.springboot.persistence.repository.UserRepository;
+   import com.example.springboot.persistence.entity.Comment;
+   import com.example.springboot.persistence.repository.CommentRepository;
 
    @Service
-   public class UserService {
+   public class CommentService {
 
        @Autowired
-       private UserRepository userRepository;
+       private CommentRepository commentRepository;
 
-       public User save(User user) {
-           return userRepository.save(user);
+       public List<Comment> findAll() {
+           return commentRepository.findAll();
        }
 
-       public Boolean existsById(String id) {
-           return userRepository.existsById(id);
-       }
-
-       public User findById(String id) {
-           return userRepository.findById(id).orElse(null);
-       }
-
-       public Iterable<User> findAll() {
-           return userRepository.findAll();
+       public Comment findById(String id) {
+           return commentRepository.findById(id).orElse(null);
        }
 
        public Long count() {
-           return userRepository.count();
+           return commentRepository.count();
+       }
+
+       public Comment save(Comment comment) {
+           return commentRepository.save(comment);
        }
 
        public void deleteById(String id) {
-           userRepository.deleteById(id);
+           commentRepository.deleteById(id);
        }
 
        public void deleteAll() {
-           userRepository.deleteAll();
+           commentRepository.deleteAll();
        }
    }
-
    ```
+
+1. created_at とか updated_at を自動入力にしたい場合は Auditing を有効化する必要がある。
+
+   ```java
+   package com.example.springboot;
+
+   import org.springframework.boot.SpringApplication;
+   import org.springframework.boot.autoconfigure.SpringBootApplication;
+   import org.springframework.data.mongodb.config.EnableMongoAuditing;
+
+   @EnableMongoAuditing
+   @SpringBootApplication
+   public class Application {
+
+     public static void main(String[] args) {
+       SpringApplication.run(Application.class, args);
+     }
+
+   }
+   ```
+
+# 課題
+
+1. PostgreSQL, mongoDB どちらでも良いのでテキスト中の永続化層を実装せよ
+1. Service を実装せよ
+1. Controller を実装し外部からアクセスできることを確認せよ
+1. HTTP 通信で GET, POST, PUT, DELETE が実行できることを確認せよ
+
+   1. PostgreSQL の場合
+
+      1. GET
+         ```shell
+         curl http://localhost:8080/api/user
+         ```
+      1. POST
+         ```shell
+         curl -X POST -H "Content-Type: application/json" -d '{"name" : "太郎丸" , "email" : "aaa@exmple.com"}' http://localhost:8080/api/user/1
+         ```
+      1. PUT
+         ```shell
+         curl -X PUT -H "Content-Type: application/json" -d '{"name" : "三郎" , "email" : "zzz@exmple.com"}' http://localhost:8080/api/user
+         ```
+      1. DELETE
+         ```shell
+         curl -X DELETE http://localhost:8080/api/user/2
+         ```
+
+   1. MongoDB の場合
+
+      1. GET
+         ```shell
+         curl http://localhost:8080/api/comment
+         ```
+      1. PUT
+
+         初期データがないので先に PUT しておく。
+
+         ```shell
+         curl -X PUT -H "Content-Type: application/json" -d '{"role" : "user" , "content" : "こんにちは"}' http://localhost:8080/api/comment
+         ```
+
+      1. POST
+
+         id 部分は PUT の結果を参考に取得した値に置き換える。
+
+         ```shell
+         curl -X POST -H "Content-Type: application/json" -d '{"role" : "user" , "content" : "こんばんは"}' http://localhost:8080/api/comment/64d3009d2bf42014c43da028
+         ```
+
+      1. DELETE
+
+         id 部分は PUT の結果を参考に取得した値に置き換える。
+
+         ```shell
+         curl -X DELETE http://localhost:8080/api/comment/64d3009d2bf42014c43da028
+         ```

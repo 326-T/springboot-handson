@@ -147,7 +147,7 @@ package com.example.springboot.web.request;
 @Data // @Getter + @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRequest {
+public class SampleRequest {
     private String name;
     private Integer age;
 }
@@ -157,8 +157,8 @@ controller は以下になる。
 
 ```Java
 @PostMapping("/user")
-public String user(@RequestBody UserRequest userRequest) {
-    return "リクエストボディで 名前:%s, 年齢:%d を受け取りました".formatted(userRequest.getName(), userRequest.getAge());
+public String user(@RequestBody SampleRequest sampleRequest) {
+    return "リクエストボディで 名前:%s, 年齢:%d を受け取りました".formatted(sampleRequest.getName(), sampleRequest.getAge());
 }
 ```
 
@@ -192,8 +192,8 @@ $ curl -X POST -H "Content-Type: application/json" -d '{"name" : "佐藤" , "age
 
 ```Java
 @GetMapping("/user/{id}")
-public UserResponse user(@PathVariable Integer id) {
-    return UserResponse.builder().name("伊藤").age(20).build();
+public SampleResponse user(@PathVariable Integer id) {
+    return SampleResponse.builder().name("伊藤").age(20).build();
 }
 ```
 
@@ -207,7 +207,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UserResponse {
+public class SampleResponse {
     private String name;
     private Integer age;
 }
