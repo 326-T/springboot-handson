@@ -21,7 +21,7 @@ package com.example.springboot.it;
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestExecutionListeners(listeners = { FlywayTestExecutionListener.class }, mergeMode = MergeMode.MERGE_WITH_DEFAULTS)
-public class UserApiTest {
+class UserApiTest {
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired

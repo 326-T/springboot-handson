@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.springboot.exception.exceptions.NotFoundException;
 import com.example.springboot.persistence.entity.User;
 import com.example.springboot.service.UserService;
 import com.example.springboot.web.request.UserRequest;
@@ -43,12 +44,9 @@ public class UserController {
     }
 
     @GetMapping("/id/{id}")
-    public UserResponse findById(HttpServletResponse httpServletResponse, @PathVariable Integer id) {
+    public UserResponse findById(HttpServletResponse httpServletResponse, @PathVariable Integer id)
+            throws NotFoundException {
         User user = userService.findById(id);
-        if(user == null) {
-            httpServletResponse.setStatus(HttpStatus.NOT_FOUND.value());
-            return null;
-        }
         return UserResponse.builder()
                 .id(user.getId())
                 .name(user.getName())

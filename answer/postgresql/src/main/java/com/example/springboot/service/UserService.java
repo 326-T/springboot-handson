@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.springboot.exception.exceptions.NotFoundException;
 import com.example.springboot.persistence.entity.User;
 import com.example.springboot.persistence.mapper.UserMapper;
 
@@ -18,8 +19,12 @@ public class UserService {
         return userMapper.findAll();
     }
 
-    public User findById(Integer id) {
-        return userMapper.findById(id);
+    public User findById(Integer id) throws NotFoundException {
+        User user = userMapper.findById(id);
+        if (user == null) {
+            throw new NotFoundException("IDが %s のユーザーは存在しません。".formatted(id));
+        }
+        return user;
     }
 
     public void insert(User user) {

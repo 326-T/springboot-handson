@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.example.springboot.web.response.ErrorResponse;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.ClassOrderer;
 import org.junit.jupiter.api.Nested;
@@ -35,7 +36,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @TestClassOrder(ClassOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestExecutionListeners(listeners = { FlywayTestExecutionListener.class }, mergeMode = MergeMode.MERGE_WITH_DEFAULTS)
-public class UserApiTest {
+class UserApiTest {
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
@@ -98,6 +99,18 @@ public class UserApiTest {
             assertThat(responseEntity.getBody())
                     .extracting(UserResponse::getId, UserResponse::getName, UserResponse::getEmail)
                     .containsExactly(2, "次郎", "yyy@example.com");
+        }
+
+        @Test
+        void 存在しないレコード() throws JsonProcessingException {
+            // when
+            ResponseEntity<String> responseEntity = restTemplate.exchange("/api/user/id/99", HttpMethod.GET,
+                    new HttpEntity<>(httpHeaders), String.class);
+            // then
+            Map<String, String> body = mapper.readValue(responseEntity.getBody(), new TypeReference<>() {
+            });
+            assertThat(responseEntity.getStatusCode().value()).isEqualTo(404);
+            assertThat(body.get("message")).isEqualTo("IDが 99 のユーザーは存在しません。");
         }
     }
 

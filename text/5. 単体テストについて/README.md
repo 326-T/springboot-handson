@@ -45,7 +45,7 @@ import com.example.springboot.persistence.entity.User;
 import com.example.springboot.persistence.mapper.UserMapper;
 
 @SpringBootTest
-public class UserServiceTest {
+class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
@@ -130,7 +130,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(UserController.class)
-public class UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     MockMvc mockMvc;

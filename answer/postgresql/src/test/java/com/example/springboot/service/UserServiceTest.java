@@ -8,17 +8,20 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import com.example.springboot.exception.exceptions.NotFoundException;
 import com.example.springboot.persistence.entity.User;
 import com.example.springboot.persistence.mapper.UserMapper;
 
 @SpringBootTest
-public class UserServiceTest {
+class UserServiceTest {
 
     @InjectMocks
     private UserService userService;
@@ -45,17 +48,28 @@ public class UserServiceTest {
                 .containsExactly(2, "次郎", "yyy@example.com");
     }
 
-    @Test
-    void findById() {
-        // given
-        User user = User.builder().id(1).name("太郎").email("xxx@example.com").build();
-        when(userMapper.findById(1)).thenReturn(user);
-        // when
-        User actual = userService.findById(1);
-        // then
-        assertThat(actual)
-                .extracting(User::getId, User::getName, User::getEmail)
-                .containsExactly(1, "太郎", "xxx@example.com");
+    @Nested
+    class findById {
+        @Test
+        void ok() throws NotFoundException {
+            // given
+            User user = User.builder().id(1).name("太郎").email("xxx@example.com").build();
+            when(userMapper.findById(1)).thenReturn(user);
+            // when
+            User actual = userService.findById(1);
+            // then
+            assertThat(actual)
+                    .extracting(User::getId, User::getName, User::getEmail)
+                    .containsExactly(1, "太郎", "xxx@example.com");
+        }
+
+        @Test
+        void ng() {
+            // given
+            when(userMapper.findById(99)).thenReturn(null);
+            // when, then
+            assertThrows(NotFoundException.class, () -> userService.findById(99));
+        }
     }
 
     @Test
