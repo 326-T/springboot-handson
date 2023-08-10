@@ -8,6 +8,8 @@ JUnit の場合は必要なものは以下の通り。
 - テスト用の SQL マイグレーションファイル
 - (任意)テストクラスの前後に実行したいことがあれば`TestExecutionListener`を書く
 
+---
+
 ## テストクラス
 
 ```java
@@ -125,7 +127,75 @@ public class UserApiTest {
 新しいアノテーションがいくつか増えたので解説する。
 |アノテーション|説明|
 |---|---|
-|||
+|`@SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)`|ランダムなポートで SpringBoot を立ち上げるという意味。|
+|`@TestClassOrder(ClassOrderer.OrderAnnotation.class)`|テストクラス毎に実行順番を指定するために必要。結合テストで CRUD を行うとデータ挿入や変更後に参照をするとデータが変わっているためテストに失敗してしまう。<br>そのため`GET`→`POST`/`PUT`/`DELETE`の順でテストを行う。|
+|`@TestInstance(TestInstance.Lifecycle.PER_CLASS)`|テストインスタンスの生成をこのクラスを基準に行うという意味。UserApiTest クラスのコンストラクトが複数回呼ばれないようにするために指定している。|
+|`@TestExecutionListeners(listeners = { FlywayTestExecutionListener.class }, mergeMode = MergeMode.MERGE_WITH_DEFAULTS)`|テストクラス（例えば UserApiTest）がコンストラクトされる前後などに実行したい処理を記載した ExecutionListener を紐づける。MERGE_WITH_DEFAULTS はデフォルトの設定に追加するという意味。デフォルトは DI を行う ExecutionListener が紐づいている。|
+|`@BeforeAll`|全てのテストを実行する前に一度だけ実行する処理。似たアノテーションに`@AfterAll`, `@BeforeEach`, `@AfterEach`などがある。|
+|`@Nested`|テストシナリオをグルーピングする。視認性が上がるのでまとめておくとよい。よくまとめるのはテスト対象毎や正常系・異常系。|
+
+結合テスト特有のクラスがあるので解説する。
+
+| クラス名         | 説明                          |
+| ---------------- | ----------------------------- |
+| TestRestTemplate | HTTP リクエストを実際に送る。 |
+
+以下のフォーマットで使う。
+
+```java
+ResponseEntity<レスポンスクラス> responseEntity = restTemplate.exchange(URLパス, HttpMethod.GET, new HttpEntity<>(httpHeaders), レスポンスクラスの型);
+```
+
+以下のように型がない場合は new TypeReference で作れる。たまーに便利。Java11 以降ではジェネリクス(<>のこと)が後ろでは省略できるのでシンプルに書ける。<br>
+わざわざ型を作った理由は UserIndexResponse のようにネストしている場合は Jackson がうまくデシリアライズしてくれないため。一応、UserIndexResponse に Request と同様に`@NoArgsConstructor`と`@AllArgsConstructor`をつければデシリアライズできるようになるが、テストのために余計なコードを書きたく無いのでこうしている。
+
+```java
+Map<String, List<UserResponse>> body = mapper.readValue(responseEntity.getBody(), new TypeReference<>() {});
+```
+
+---
+
+## テスト用の SQL マイグレーションファイル
+
+src/test/resources/db/migration に以下のファイルを追加
+
+```sql
+INSERT INTO users (name, email)
+VALUES
+  (N'三郎', N'zzz@example.com');
+```
+
+flyway はデフォルトでは以下のような設定になっている。テストの場合は main と test 両方とも参照される。
+
+| ケース   | 確認するマイグレーションファイルのパス                             |
+| -------- | ------------------------------------------------------------------ |
+| 通常実行 | src/main/resources/db/migration                                    |
+| テスト   | src/main/resources/db/migration<br>src/test/resources/db/migration |
+
+---
+
+## TestExecutionListener
+
+以下では flyway の clean と migrate を実行している。DB の初期化とテスト用のデータの挿入。
+
+```java
+package com.example.springboot.listener;
+
+import org.flywaydb.core.Flyway;
+import org.springframework.test.context.support.AbstractTestExecutionListener;
+
+public class FlywayTestExecutionListener extends AbstractTestExecutionListener {
+
+    @Override
+    public void beforeTestClass(org.springframework.test.context.TestContext testContext) throws Exception {
+        Flyway flyway = testContext.getApplicationContext().getBean(Flyway.class);
+        flyway.clean();
+        flyway.migrate();
+    }
+}
+```
+
+---
 
 # 課題
 

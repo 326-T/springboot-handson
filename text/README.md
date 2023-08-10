@@ -9,7 +9,7 @@ Spring の持つ複雑さを隠蔽し、短時間でアプリケーションを�
 
 [参考：ソフトバンクの記事](https://www.softbank.jp/biz/blog/cloud-technology/articles/202206/web-3-tier-architecture/)
 
-![三層ウェブアプリケーションの図](./images/img-web-3-tier-architecture-20220622-02.jpeg)
+![三層ウェブアプリケーションの図](./_images/img-web-3-tier-architecture-20220622-02.jpeg)
 
 今回開発するのはこの図の`APPサーバー`である。
 
@@ -34,7 +34,7 @@ Spring の持つ複雑さを隠蔽し、短時間でアプリケーションを�
 
 ## 1.3 クリーンアーキテクチャについて
 
-![クリーンアーキテクチャの図](./images/CleanArchitecture.jpg)
+![クリーンアーキテクチャの図](./_images/CleanArchitecture.jpg)
 
 クリーンアーキテクチャとは、Robert C. Martin（通称「Uncle Bob」）が提唱したソフトウェア設計のパターンである。以下の 4 つの層から成り立っている。
 
@@ -144,7 +144,7 @@ public class MyService {
 
 ### DI イメージ図
 
-![DIの流れの図](./images/di.drawio.png)
+![DIの流れの図](./_images/di.drawio.png)
 
 ---
 
