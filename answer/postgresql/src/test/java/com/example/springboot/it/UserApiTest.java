@@ -164,16 +164,19 @@ class UserApiTest {
     @Order(4)
     class DeleteById {
         @Test
-        void success() {
+        void success() throws JsonProcessingException {
             // when
             ResponseEntity<Void> responseEntity = restTemplate.exchange("/api/user/2", HttpMethod.DELETE,
                     new HttpEntity<>(httpHeaders), Void.class);
-            ResponseEntity<UserResponse> actual = restTemplate.exchange("/api/user/id/2", HttpMethod.GET,
-                    new HttpEntity<>(httpHeaders), UserResponse.class);
+            ResponseEntity<String> actual = restTemplate.exchange("/api/user/id/2", HttpMethod.GET,
+                    new HttpEntity<>(httpHeaders), String.class);
             // then
             assertThat(responseEntity.getStatusCode().value()).isEqualTo(204);
             assertThat(actual.getStatusCode().value()).isEqualTo(404);
-            assertThat(actual.getBody()).isNull();
+            Map<String, String> body = mapper.readValue(actual.getBody(), new TypeReference<>() {
+            });
+            assertThat(actual.getStatusCode().value()).isEqualTo(404);
+            assertThat(body.get("message")).isEqualTo("IDが 2 のユーザーは存在しません。");
         }
     }
 }
