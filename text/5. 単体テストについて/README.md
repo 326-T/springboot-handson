@@ -6,7 +6,7 @@
 ## モック化
 
 単体テストをする際には切り分けのために関連インスタンスをモック化する。<br>以下の図は Service をテストする場合のモック化。
-![](./images/mock.drawio.png)
+![](./_images/mock.drawio.png)
 
 ## JUnit
 

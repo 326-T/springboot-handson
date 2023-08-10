@@ -5,7 +5,7 @@
 1. Extension Pack for Java
 2. Spring Boot Extension Pack
 
-<img src="./images/ExtensionPackforJava.png" width=500> <img src="./images/SpringBootExtensionPack.png" width=500>
+<img src="./_images/ExtensionPackforJava.png" width=500> <img src="./_images/SpringBootExtensionPack.png" width=500>
 
 ---
 
@@ -13,21 +13,21 @@
 
 ### 2.1 Create Java Project をクリック
 
-![](./images/1.png)
+![](./_images/1.png)
 
 ### 2.2 Spring Boot をクリック
 
-![](./images/2.png)
+![](./_images/2.png)
 
 ### 2.3 Maven Project をクリック
 
 Maven も Gradle もパッケージ管理ツール。今回は maven を使う。
-![](./images/3.png)
+![](./_images/3.png)
 
 ### 2.4 3.1.2 をクリック
 
 SpringBoot のバージョンは 3.1.2 を使用する。
-![](./images/4.png)
+![](./_images/4.png)
 
 ### 2.5 パッケージ名を入力する
 
@@ -37,16 +37,16 @@ Java はパッケージをディレクトリ構成で表現する。同一のパ
 ここで指定したパッケージ名のディレクトリが作られる。
 
 e.g.) `com.exmple`とした場合は`src/com/exmple`がこのプロジェクトのルートパッケージになる。
-![](./images/5.png)
+![](./_images/5.png)
 
 ### 2.6 Project 名を設定する
 
 ルートディレクトリやデフォルトのアプリの名前が指定した値になる。
-![](./images/6.png)
+![](./_images/6.png)
 
 ### 2.7 ビルドターゲットを jar に指定する
 
-![](./images/7.png)
+![](./_images/7.png)
 
 |                      | JAR                                                           | WAR                                                                                 |
 | -------------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
@@ -59,13 +59,13 @@ e.g.) `com.exmple`とした場合は`src/com/exmple`がこのプロジェクト�
 ### 2.8 Java のバージョン 17 に指定
 
 LTS の 17 で
-![](./images/8.png)
+![](./_images/8.png)
 
 ### 2.9 出力するディレクトリを選択
 
 お好きな場所で
 
-![](./images/9.png)
+![](./_images/9.png)
 
 ---
 
@@ -74,7 +74,7 @@ LTS の 17 で
 1. `src/main/java/<指定したパッケージ>/<指定したアプリケーション名>/Application.java` を開く
 2. Run を押す
 3. 以下のような起動ログが出れば OK
-   ![](./images/firstRun.png)
+   ![](./_images/firstRun.png)
 
 ---
 
@@ -103,7 +103,7 @@ LTS の 17 で
 
    画面中央上にあるリスタートボタンを押しても良い。
 
-   ![](./images/secondRun.png)
+   ![](./_images/secondRun.png)
 
 3. ブラウザからアクセスする。
 
@@ -111,7 +111,7 @@ LTS の 17 で
 
    [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health)
 
-   ![](./images/health.png)
+   ![](./_images/health.png)
 
 ---
 
