@@ -35,7 +35,10 @@ public class UserService {
         userMapper.update(user);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Integer id) throws NotFoundException {
+        if (userMapper.findById(id) == null) {
+            throw new NotFoundException("IDが %s のユーザーは存在しません。".formatted(id));
+        }
         userMapper.deleteById(id);
     }
 }

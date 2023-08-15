@@ -92,13 +92,26 @@ class UserServiceTest {
         verify(userMapper).update(any(User.class));
     }
 
-    @Test
-    void deleteById() {
-        // given
-        doNothing().when(userMapper).deleteById(1);
-        // when
-        userService.deleteById(1);
-        // then
-        verify(userMapper).deleteById(1);
+    @Nested
+    class deleteById {
+        @Test
+        void ok() throws NotFoundException {
+            // given
+            when(userMapper.findById(1)).thenReturn(User.builder().id(1).name("太郎").email("xxx@example.com").build());
+            doNothing().when(userMapper).deleteById(1);
+            // when
+            userService.deleteById(1);
+            // then
+            verify(userMapper).deleteById(1);
+        }
+
+        @Test
+        void ng() throws NotFoundException {
+            // given
+            when(userMapper.findById(99)).thenReturn(null);
+            doNothing().when(userMapper).deleteById(99);
+            // when, then
+            assertThrows(NotFoundException.class, () -> userService.deleteById(99));
+        }
     }
 }

@@ -70,7 +70,7 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteById(@PathVariable Integer id) {
+    public void deleteById(@PathVariable Integer id) throws NotFoundException {
         userService.deleteById(id);
     }
 }

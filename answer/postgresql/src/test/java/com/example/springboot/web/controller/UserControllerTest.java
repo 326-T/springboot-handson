@@ -1,8 +1,7 @@
 package com.example.springboot.web.controller;
 
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -109,13 +108,28 @@ class UserControllerTest {
                 .andExpect(status().isCreated());
     }
 
-    @Test
-    void deleteById() throws Exception {
-        // given
-        doNothing().when(userService).deleteById(1);
-        // when, then
-        mockMvc.perform(delete("/api/user/1")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNoContent());
+    @Nested
+    class deleteById {
+        @Test
+        void ok() throws Exception {
+            // given
+            doNothing().when(userService).deleteById(1);
+            // when, then
+            mockMvc.perform(delete("/api/user/1")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNoContent());
+        }
+
+        @Test
+        void ng() throws Exception {
+            // given
+            ErrorResponse expected = ErrorResponse.builder().message("not found").build();
+            doThrow(new NotFoundException("not found")).when(userService).deleteById(99);
+            // when, then
+            mockMvc.perform(delete("/api/user/99")
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isNotFound())
+                    .andExpect(content().json(mapper.writeValueAsString(expected)));
+        }
     }
 }
