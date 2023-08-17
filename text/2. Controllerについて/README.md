@@ -70,7 +70,7 @@ public String path(@PathVariable Integer id) {
 
 ### 2.2 クエリパラメータ
 
-`@RequestParam`を使う。変数名`id`と`/path/{id}`は一致しなくてはならない。
+`@RequestParam`を使う。変数名`id`と`/query?id=1`の`id`は一致しなくてはならない。
 
 ```Java
 @GetMapping("/query")
