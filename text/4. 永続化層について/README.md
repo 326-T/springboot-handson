@@ -121,17 +121,17 @@
 
        @Insert("INSERT INTO users(name, email) VALUES(#{name}, #{email});")
        @Options(useGeneratedKeys = true, keyProperty = "id")
-       void insert(User users);
+       void insert(User user);
 
        @Update("UPDATE users SET name = #{name}, email = #{email} WHERE id = #{id};")
-       void update(User users);
+       void update(User user);
 
        @Delete("DELETE FROM users WHERE id = #{id};")
        void deleteById(Integer id);
    }
    ```
 
-   SQL Mapper の場合はこのように SQL を書く必要がある。対して ORMapper の場合は
+   SQL Mapper の場合はこのように SQL を書く必要がある。
 
 1. DI を行う
 
@@ -178,7 +178,7 @@
 さらに初期データを用意してあげる必要がある。今回はマイグレーション管理には`flyway`を使う。
 
 - flyway は実行した SQL のファイル名とそのハッシュ値を管理している。
-- flyway は V1.0.0**sample.sql のように`^V\d+(\.\d+)\***.\*\.sql$`の形式の SQL ファイルを追跡しバージョン順に実行してくれる。
+- flyway は V1.0.0__sample.sql のように`^V\d+(\.\d+)\***.\*\.sql$`の形式の SQL ファイルを追跡しバージョン順に実行してくれる。
 - まだ実行していないファイルを見つけると実行する。
 - 実行済みのバージョンより古いバージョンがあるとエラーになる。
 - 過去に実施したファイルのハッシュ値が変わるとエラーになる。
