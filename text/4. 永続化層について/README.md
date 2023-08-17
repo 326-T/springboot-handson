@@ -301,7 +301,7 @@ NoSQL データベースは、従来のリレーショナルデータベース�
 1. エンティティを定義
 
    ```java
-   package com.example.springboot.persistence.repository;
+   package com.example.springboot.persistence.entity;
 
    //...
 
