@@ -67,7 +67,7 @@
        <dependency>
            <groupId>org.mybatis.spring.boot</groupId>
            <artifactId>mybatis-spring-boot-starter</artifactId>
-           <version>2.1.4</version>
+           <version>3.0.2</version>
        </dependency>
    </dependencies>
    ```
@@ -78,9 +78,9 @@
    ```yaml
    spring:
      datasource:
-       url: jdbc:postgresql://localhost:5432/test
-       username: user
-       password: password
+       url: jdbc:postgresql://localhost:5432/sample
+       username: sample
+       password: sample
    ```
 1. エンティティを追加
 
