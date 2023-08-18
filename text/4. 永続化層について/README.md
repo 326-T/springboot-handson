@@ -439,11 +439,11 @@ NoSQL データベースは、従来のリレーショナルデータベース�
          ```
       1. POST
          ```shell
-         curl -X POST -H "Content-Type: application/json" -d '{"name" : "太郎丸" , "email" : "aaa@exmple.com"}' http://localhost:8080/api/user/1
+         curl -X POST -H "Content-Type: application/json" -d '{"name" : "太郎丸" , "email" : "aaa@exmple.com"}' http://localhost:8080/api/user
          ```
       1. PUT
          ```shell
-         curl -X PUT -H "Content-Type: application/json" -d '{"name" : "三郎" , "email" : "zzz@exmple.com"}' http://localhost:8080/api/user
+         curl -X PUT -H "Content-Type: application/json" -d '{"name" : "三郎" , "email" : "zzz@exmple.com"}' http://localhost:8080/api/user/1
          ```
       1. DELETE
          ```shell
