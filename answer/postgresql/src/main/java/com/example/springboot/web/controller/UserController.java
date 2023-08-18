@@ -54,18 +54,18 @@ public class UserController {
                 .build();
     }
 
-    @PostMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable Integer id, @RequestBody UserRequest userRequest) {
-        userService.update(User.builder().id(id).name(userRequest.getName()).email(userRequest.getEmail()).build());
-    }
-
-    @PutMapping
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void insert(HttpServletResponse httpServletResponse, @RequestBody UserRequest userRequest) {
         User user = User.builder().name(userRequest.getName()).email(userRequest.getEmail()).build();
         userService.insert(user);
         httpServletResponse.setHeader("Location", "/api/user/%d".formatted(user.getId()));
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable Integer id, @RequestBody UserRequest userRequest) {
+        userService.update(User.builder().id(id).name(userRequest.getName()).email(userRequest.getEmail()).build());
     }
 
     @DeleteMapping("/{id}")

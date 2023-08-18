@@ -81,20 +81,6 @@ class UserControllerTest {
     }
 
     @Test
-    void update() throws Exception {
-        // given
-        Map<String, String> userRequestMap = new HashMap<>();
-        userRequestMap.put("name", "太郎");
-        userRequestMap.put("email", "xxx@example.com");
-        doNothing().when(userService).update(any(User.class));
-        // when, then
-        mockMvc.perform(post("/api/user/1")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(userRequestMap)))
-                .andExpect(status().isNoContent());
-    }
-
-    @Test
     void insert() throws Exception {
         // given
         Map<String, String> userRequestMap = new HashMap<>();
@@ -102,10 +88,24 @@ class UserControllerTest {
         userRequestMap.put("email", "xxx@example.com");
         doNothing().when(userService).insert(any(User.class));
         // when, then
-        mockMvc.perform(put("/api/user")
+        mockMvc.perform(post("/api/user")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(userRequestMap)))
                 .andExpect(status().isCreated());
+    }
+
+    @Test
+    void update() throws Exception {
+        // given
+        Map<String, String> userRequestMap = new HashMap<>();
+        userRequestMap.put("name", "太郎");
+        userRequestMap.put("email", "xxx@example.com");
+        doNothing().when(userService).update(any(User.class));
+        // when, then
+        mockMvc.perform(put("/api/user/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(mapper.writeValueAsString(userRequestMap)))
+                .andExpect(status().isNoContent());
     }
 
     @Nested

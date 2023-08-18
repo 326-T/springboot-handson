@@ -115,28 +115,6 @@ class UserApiTest {
 
     @Nested
     @Order(2)
-    class Update {
-        @Test
-        void success() {
-            // given
-            Map<String, String> userRequestMap = new HashMap<>();
-            userRequestMap.put("name", "三郎次郎太郎");
-            userRequestMap.put("email", "aaa@example.com");
-            // when
-            ResponseEntity<Void> responseEntity = restTemplate.exchange("/api/user/3", HttpMethod.POST,
-                    new HttpEntity<>(userRequestMap, httpHeaders), Void.class);
-            ResponseEntity<UserResponse> actual = restTemplate.exchange("/api/user/id/3", HttpMethod.GET,
-                    new HttpEntity<>(httpHeaders), UserResponse.class);
-            // then
-            assertThat(responseEntity.getStatusCode().value()).isEqualTo(204);
-            assertThat(actual.getBody())
-                    .extracting(UserResponse::getId, UserResponse::getName, UserResponse::getEmail)
-                    .containsExactly(3, "三郎次郎太郎", "aaa@example.com");
-        }
-    }
-
-    @Nested
-    @Order(3)
     class Insert {
         @Test
         void success() {
@@ -145,7 +123,7 @@ class UserApiTest {
             userRequestMap.put("name", "四郎");
             userRequestMap.put("email", "www@example.com");
             // when
-            ResponseEntity<Void> responseEntity = restTemplate.exchange("/api/user", HttpMethod.PUT,
+            ResponseEntity<Void> responseEntity = restTemplate.exchange("/api/user", HttpMethod.POST,
                     new HttpEntity<>(userRequestMap, httpHeaders), Void.class);
             ResponseEntity<UserResponse> actual = restTemplate.exchange("/api/user/id/4", HttpMethod.GET,
                     new HttpEntity<>(httpHeaders), UserResponse.class);
@@ -156,6 +134,28 @@ class UserApiTest {
             assertThat(actual.getBody())
                     .extracting(UserResponse::getId, UserResponse::getName, UserResponse::getEmail)
                     .containsExactly(4, "四郎", "www@example.com");
+        }
+    }
+
+    @Nested
+    @Order(3)
+    class Update {
+        @Test
+        void success() {
+            // given
+            Map<String, String> userRequestMap = new HashMap<>();
+            userRequestMap.put("name", "三郎次郎太郎");
+            userRequestMap.put("email", "aaa@example.com");
+            // when
+            ResponseEntity<Void> responseEntity = restTemplate.exchange("/api/user/3", HttpMethod.PUT,
+                    new HttpEntity<>(userRequestMap, httpHeaders), Void.class);
+            ResponseEntity<UserResponse> actual = restTemplate.exchange("/api/user/id/3", HttpMethod.GET,
+                    new HttpEntity<>(httpHeaders), UserResponse.class);
+            // then
+            assertThat(responseEntity.getStatusCode().value()).isEqualTo(204);
+            assertThat(actual.getBody())
+                    .extracting(UserResponse::getId, UserResponse::getName, UserResponse::getEmail)
+                    .containsExactly(3, "三郎次郎太郎", "aaa@example.com");
         }
     }
 
