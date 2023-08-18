@@ -439,11 +439,11 @@ NoSQL データベースは、従来のリレーショナルデータベース�
          ```
       1. POST
          ```shell
-         curl -X POST -H "Content-Type: application/json" -d '{"name" : "太郎丸" , "email" : "aaa@exmple.com"}' http://localhost:8080/api/user
+         curl -X POST -H "Content-Type: application/json" -d '{"name" : "三郎" , "email" : "zzz@exmple.com"}' http://localhost:8080/api/user
          ```
       1. PUT
          ```shell
-         curl -X PUT -H "Content-Type: application/json" -d '{"name" : "三郎" , "email" : "zzz@exmple.com"}' http://localhost:8080/api/user/1
+         curl -X PUT -H "Content-Type: application/json" -d '{"name" : "太郎丸" , "email" : "aaa@exmple.com"}' http://localhost:8080/api/user/1
          ```
       1. DELETE
          ```shell
@@ -456,20 +456,20 @@ NoSQL データベースは、従来のリレーショナルデータベース�
          ```shell
          curl http://localhost:8080/api/comment
          ```
-      1. PUT
-
-         初期データがないので先に PUT しておく。
-
-         ```shell
-         curl -X PUT -H "Content-Type: application/json" -d '{"role" : "user" , "content" : "こんにちは"}' http://localhost:8080/api/comment
-         ```
-
       1. POST
 
-         id 部分は PUT の結果を参考に取得した値に置き換える。
+         初期データがないので先に POST しておく。
 
          ```shell
-         curl -X POST -H "Content-Type: application/json" -d '{"role" : "user" , "content" : "こんばんは"}' http://localhost:8080/api/comment/64d3009d2bf42014c43da028
+         curl -X POST -H "Content-Type: application/json" -d '{"role" : "user" , "content" : "こんにちは"}' http://localhost:8080/api/comment
+         ```
+
+      1. PUT
+
+         id 部分は POST の結果を参考に取得した値に置き換える。
+
+         ```shell
+         curl -X PUT -H "Content-Type: application/json" -d '{"role" : "user" , "content" : "こんばんは"}' http://localhost:8080/api/comment/64d3009d2bf42014c43da028
          ```
 
       1. DELETE
