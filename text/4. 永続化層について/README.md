@@ -67,7 +67,7 @@
        <dependency>
            <groupId>org.mybatis.spring.boot</groupId>
            <artifactId>mybatis-spring-boot-starter</artifactId>
-           <version>2.1.4</version>
+           <version>3.0.2</version>
        </dependency>
    </dependencies>
    ```
@@ -78,9 +78,9 @@
    ```yaml
    spring:
      datasource:
-       url: jdbc:postgresql://localhost:5432/test
-       username: user
-       password: password
+       url: jdbc:postgresql://localhost:5432/sample
+       username: sample
+       password: sample
    ```
 1. エンティティを追加
 
@@ -121,17 +121,17 @@
 
        @Insert("INSERT INTO users(name, email) VALUES(#{name}, #{email});")
        @Options(useGeneratedKeys = true, keyProperty = "id")
-       void insert(User users);
+       void insert(User user);
 
        @Update("UPDATE users SET name = #{name}, email = #{email} WHERE id = #{id};")
-       void update(User users);
+       void update(User user);
 
        @Delete("DELETE FROM users WHERE id = #{id};")
        void deleteById(Integer id);
    }
    ```
 
-   SQL Mapper の場合はこのように SQL を書く必要がある。対して ORMapper の場合は
+   SQL Mapper の場合はこのように SQL を書く必要がある。
 
 1. DI を行う
 
@@ -178,7 +178,7 @@
 さらに初期データを用意してあげる必要がある。今回はマイグレーション管理には`flyway`を使う。
 
 - flyway は実行した SQL のファイル名とそのハッシュ値を管理している。
-- flyway は V1.0.0**sample.sql のように`^V\d+(\.\d+)\***.\*\.sql$`の形式の SQL ファイルを追跡しバージョン順に実行してくれる。
+- flyway は V1.0.0__sample.sql のように`^V\d+(\.\d+)*__.*\.sql$`の形式の SQL ファイルを追跡しバージョン順に実行してくれる。
 - まだ実行していないファイルを見つけると実行する。
 - 実行済みのバージョンより古いバージョンがあるとエラーになる。
 - 過去に実施したファイルのハッシュ値が変わるとエラーになる。
@@ -301,7 +301,7 @@ NoSQL データベースは、従来のリレーショナルデータベース�
 1. エンティティを定義
 
    ```java
-   package com.example.springboot.persistence.repository;
+   package com.example.springboot.persistence.entity;
 
    //...
 
@@ -439,11 +439,11 @@ NoSQL データベースは、従来のリレーショナルデータベース�
          ```
       1. POST
          ```shell
-         curl -X POST -H "Content-Type: application/json" -d '{"name" : "太郎丸" , "email" : "aaa@exmple.com"}' http://localhost:8080/api/user/1
+         curl -X POST -H "Content-Type: application/json" -d '{"name" : "三郎" , "email" : "zzz@exmple.com"}' http://localhost:8080/api/user
          ```
       1. PUT
          ```shell
-         curl -X PUT -H "Content-Type: application/json" -d '{"name" : "三郎" , "email" : "zzz@exmple.com"}' http://localhost:8080/api/user
+         curl -X PUT -H "Content-Type: application/json" -d '{"name" : "太郎丸" , "email" : "aaa@exmple.com"}' http://localhost:8080/api/user/1
          ```
       1. DELETE
          ```shell
@@ -456,20 +456,20 @@ NoSQL データベースは、従来のリレーショナルデータベース�
          ```shell
          curl http://localhost:8080/api/comment
          ```
-      1. PUT
-
-         初期データがないので先に PUT しておく。
-
-         ```shell
-         curl -X PUT -H "Content-Type: application/json" -d '{"role" : "user" , "content" : "こんにちは"}' http://localhost:8080/api/comment
-         ```
-
       1. POST
 
-         id 部分は PUT の結果を参考に取得した値に置き換える。
+         初期データがないので先に POST しておく。
 
          ```shell
-         curl -X POST -H "Content-Type: application/json" -d '{"role" : "user" , "content" : "こんばんは"}' http://localhost:8080/api/comment/64d3009d2bf42014c43da028
+         curl -X POST -H "Content-Type: application/json" -d '{"role" : "user" , "content" : "こんにちは"}' http://localhost:8080/api/comment
+         ```
+
+      1. PUT
+
+         id 部分は POST の結果を参考に取得した値に置き換える。
+
+         ```shell
+         curl -X PUT -H "Content-Type: application/json" -d '{"role" : "user" , "content" : "こんばんは"}' http://localhost:8080/api/comment/64d3009d2bf42014c43da028
          ```
 
       1. DELETE

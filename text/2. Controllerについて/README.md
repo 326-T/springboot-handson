@@ -36,8 +36,8 @@ public class SampleController {
 | `@RestController` | RESTfulAPI のエンドポイントを作成する。                                                                                                          |
 | `@RequestMapping` | コントローラのエンドポイントのプレフィックスを指定する。上の例では[http://localhost:8080/sample](http://localhost:8080/sample)でアクセスできる。 |
 | `@GetMapping`     | `GET` のエンドポイントを作成する。データの`取得`を行うエンドポイント。                                                                           |
-| `@PostMapping`    | `POST` のエンドポイントを作成する。データの`更新`を行うエンドポイント。                                                                          |
-| `@PutMapping`     | `PUT` のエンドポイントを作成する。データの`作成`を行うエンドポイント。                                                                           |
+| `@PostMapping`    | `POST` のエンドポイントを作成する。データの`作成`を行うエンドポイント。                                                                          |
+| `@PutMapping`     | `PUT` のエンドポイントを作成する。データの`更新`を行うエンドポイント。                                                                           |
 | `@DeleteMapping`  | `DELETE` のエンドポイントを作成する。データの`削除`を行うエンドポイント。                                                                        |
 
 HTTP リクエストには大きく分けて 4 つのリクエストがある。それが`GET`/`POST`/`PUT`/`DELETE`である。
@@ -70,7 +70,7 @@ public String path(@PathVariable Integer id) {
 
 ### 2.2 クエリパラメータ
 
-`@RequestParam`を使う。変数名`id`と`/path/{id}`は一致しなくてはならない。
+`@RequestParam`を使う。変数名`id`と`/query?id=1`の`id`は一致しなくてはならない。
 
 ```Java
 @GetMapping("/query")
