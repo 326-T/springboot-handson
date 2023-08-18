@@ -27,7 +27,7 @@ import com.example.springboot.web.response.CommentResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(CommentController.class)
-public class CommentControllerTest {
+class CommentControllerTest {
 
     @Autowired
     MockMvc mockMvc;
@@ -92,6 +92,23 @@ public class CommentControllerTest {
         }
     }
 
+    @Test
+    void insert() throws Exception {
+        // given
+        Map<String, String> commentRequestMap = new HashMap<>();
+        commentRequestMap.put("role", "user");
+        commentRequestMap.put("content", "こんにちは");
+        Comment comment = Comment.builder().id("1").role("user").content("こんにちは")
+                .createdAt(LocalDateTime.parse("2023-08-01T00:00:00.000"))
+                .updatedAt(LocalDateTime.parse("2023-08-02T00:00:00.000")).version(1L).build();
+        when(commentService.save(any(Comment.class))).thenReturn(comment);
+        // when, then
+        mockMvc.perform(post("/api/comment")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(commentRequestMap)))
+                .andExpect(status().isCreated());
+    }
+
     @Nested
     class update {
         @Test
@@ -109,7 +126,7 @@ public class CommentControllerTest {
             when(commentService.findById("1")).thenReturn(comment);
             when(commentService.save(any(Comment.class))).thenReturn(comment);
             // when, then
-            mockMvc.perform(post("/api/comment/1")
+            mockMvc.perform(put("/api/comment/1")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(commentRequestMap)))
                     .andExpect(status().isOk())
@@ -125,28 +142,11 @@ public class CommentControllerTest {
             when(commentService.findById("1")).thenReturn(null);
             when(commentService.save(any(Comment.class))).thenReturn(null);
             // when, then
-            mockMvc.perform(post("/api/comment/1")
+            mockMvc.perform(put("/api/comment/1")
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(commentRequestMap)))
                     .andExpect(status().isNotFound());
         }
-    }
-
-    @Test
-    void insert() throws Exception {
-        // given
-        Map<String, String> commentRequestMap = new HashMap<>();
-        commentRequestMap.put("role", "user");
-        commentRequestMap.put("content", "こんにちは");
-        Comment comment = Comment.builder().id("1").role("user").content("こんにちは")
-                .createdAt(LocalDateTime.parse("2023-08-01T00:00:00.000"))
-                .updatedAt(LocalDateTime.parse("2023-08-02T00:00:00.000")).version(1L).build();
-        when(commentService.save(any(Comment.class))).thenReturn(comment);
-        // when, then
-        mockMvc.perform(put("/api/comment")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(commentRequestMap)))
-                .andExpect(status().isCreated());
     }
 
     @Test

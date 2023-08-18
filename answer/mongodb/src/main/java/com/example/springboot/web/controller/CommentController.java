@@ -51,7 +51,16 @@ public class CommentController {
         return map(comment);
     }
 
-    @PostMapping("/{id}")
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentResponse insert(@RequestBody CommentRequest commentRequest) {
+        return map(commentService.save(Comment.builder()
+                .role(commentRequest.getRole())
+                .content(commentRequest.getContent())
+                .build()));
+    }
+
+    @PutMapping("/{id}")
     public CommentResponse update(HttpServletResponse httpServletResponse, @PathVariable String id,
             @RequestBody CommentRequest commentRequest) {
         Comment comment = commentService.findById(id);
@@ -66,15 +75,6 @@ public class CommentController {
                 .content(commentRequest.getContent())
                 .createdAt(comment.getCreatedAt())
                 .version(comment.getVersion())
-                .build()));
-    }
-
-    @PutMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CommentResponse insert(@RequestBody CommentRequest commentRequest) {
-        return map(commentService.save(Comment.builder()
-                .role(commentRequest.getRole())
-                .content(commentRequest.getContent())
                 .build()));
     }
 
