@@ -161,7 +161,7 @@ class UserControllerTest {
         userRequestMap.put("email", "xxx@example.com");
         doNothing().when(userService).insert(any(User.class));
         // when, then
-        mockMvc.perform(put("/api/user")
+        mockMvc.perform(post("/api/user")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(userRequestMap)))
                 .andExpect(status().isCreated());
