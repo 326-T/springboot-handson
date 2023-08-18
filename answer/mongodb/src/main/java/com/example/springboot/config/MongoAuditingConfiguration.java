@@ -2,9 +2,9 @@ package com.example.springboot.config;
 
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.mongodb.config.EnableReactiveMongoAuditing;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 
 @Configuration
-@EnableReactiveMongoAuditing
+@EnableMongoAuditing
 public class MongoAuditingConfiguration {
 }
